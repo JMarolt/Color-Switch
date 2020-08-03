@@ -9,6 +9,8 @@ public class Player extends GameObject{
 
 	public Player(Vector2 vec, Sprite sprite) {
 		super(vec, sprite);
+		this.setPlayer(true);
+		this.setCanRotate(false);
 	}
 	
 	public void jump() {
@@ -25,6 +27,10 @@ public class Player extends GameObject{
 	
 	public void draw(Graphics g) {
 		super.draw(g);
+	}
+	
+	public void die() {
+		System.out.println("dead");
 	}
 
 }

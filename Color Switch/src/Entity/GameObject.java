@@ -1,5 +1,7 @@
 package Entity;
 
+import static Scene.Scene.camera;
+
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
@@ -18,8 +20,11 @@ public class GameObject {
 	private float vy;
 	private double initialRotation;
 	private double rps;
+	private double rotationPos = initialRotation;
 	private final float MAX_VY = 50;
-	public static boolean started = false;
+	public boolean isRunning = false;
+	private boolean isPlayer;
+	private boolean canRotate;
 
 	public GameObject(Vector2 vec, Sprite sprite) {
 		this.vec = vec;
@@ -27,15 +32,18 @@ public class GameObject {
 	}
 
 	public void update() {
-		if (started) {
+		if (isRunning && !isPlayer) {
 			gravity = 1;
 			vy -= gravity;
-			this.vec.setY(this.vec.getY() - vy);
+			this.vec.setY(this.vec.getY() + vy);
 			if (vy > MAX_VY) {
 				vy = MAX_VY;
 			}
 			if (-vy < -MAX_VY) {
 				vy = -MAX_VY;
+			}
+			if(this.canRotate) {
+				rotate();
 			}
 		}
 	}
@@ -44,37 +52,31 @@ public class GameObject {
 
 	}
 
-	public void removeObject(GameObject me) {
-		for (int i = 0; i < objects.size(); i++) {
-			if (me.equals(objects.get(i))) {
-				objects.remove(i);
-				break;
-			}
-		}
-		me = null;
-	}
-
 	public void addObject(GameObject go) {
 		objects.add(go);
 	}
-
-//	public void clone() {
-//		objects.add(new GameObject(this.vec, this.sprite));
-//	}
 
 	public ArrayList<GameObject> getObjects() {
 		return this.objects;
 	}
 
 	public void jump() {
-		started = true;
-		vy = 15;
+		isRunning = true;
+		vy = 12;
 	}
 
 	public void draw(Graphics g) {
 		Graphics2D g2d = (Graphics2D) g;
-		g2d.rotate(initialRotation, vec.getX() + (width/2), vec.getY() + (height/2));
-		g2d.drawImage(sprite.getImage(), (int) vec.getX(), (int) vec.getY(), null);
+		g2d.rotate(initialRotation, vec.getX() + (width / 2) - 1, vec.getY() + (height/2) - 1);
+		g2d.drawImage(sprite.getImage(), (int) vec.getX(), (int) (vec.getY() - camera.getVec().getY()), null);
+		//g2d.rotate(rotationPos, vec.getX() + (width / 2) - 1, vec.getY() + (height/2) - 1);
+//		if(initialRotation != 0) {
+//			initialRotation = 0;
+//		}
+	}
+	
+	public void rotate() {
+		rotationPos += (rps);
 	}
 
 	public float getGravity() {
@@ -147,6 +149,38 @@ public class GameObject {
 
 	public void setHeight(int height) {
 		this.height = height;
+	}
+
+	public boolean isPlayer() {
+		return isPlayer;
+	}
+
+	public void setPlayer(boolean isPlayer) {
+		this.isPlayer = isPlayer;
+	}
+
+	public boolean isRunning() {
+		return isRunning;
+	}
+
+	public void setRunning(boolean isRunning) {
+		this.isRunning = isRunning;
+	}
+
+	public double getRotationPos() {
+		return rotationPos;
+	}
+
+	public void setRotationPos(double rotationPos) {
+		this.rotationPos = rotationPos;
+	}
+
+	public boolean isCanRotate() {
+		return canRotate;
+	}
+
+	public void setCanRotate(boolean canRotate) {
+		this.canRotate = canRotate;
 	}
 
 }

@@ -1,7 +1,10 @@
 package Miscellaneous;
 
-public class Vector2 {
+import java.io.Serializable;
 
+public class Vector2 implements Serializable{
+
+	private static final long serialVersionUID = 1L;
 	private float x, y;
 	
 	public Vector2(float x, float y) {
